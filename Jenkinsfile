@@ -3,20 +3,20 @@ pipeline {
   stages {
     stage('Docker Build') {
       steps {
-        sh "docker build -t younesic/podinfo:${env.BUILD_NUMBER} ."
+        sh "docker build -t younesic/modified-jenkins:${env.BUILD_NUMBER} ."
       }
     }
     stage('Docker Push') {
       steps {
         withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
           sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
-          sh "docker push younesic/podinfo:${env.BUILD_NUMBER}"
+          sh "docker push younesic/modified-jenkins:${env.BUILD_NUMBER}"
         }
       }
     }
     stage('Docker Remove Image') {
       steps {
-        sh "docker rmi younesic/podinfo:${env.BUILD_NUMBER}"
+        sh "docker rmi younesic/modified-jenkins:${env.BUILD_NUMBER}"
       }
     }
     stage('Apply Kubernetes Files') {
